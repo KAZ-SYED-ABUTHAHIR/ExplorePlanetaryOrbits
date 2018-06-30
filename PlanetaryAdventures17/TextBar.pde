@@ -15,22 +15,20 @@ public class TextBar extends Widget {
   //boolean textDelimited = true; //is this necessary?
   char delimiter = ':';
 
-  TextBar(float _leftPos, float _topPos, float _barWidth, float _barHeight, Widget _parent) {
-    super(_topPos, _barWidth, _barHeight);
-    this.leftPos = _leftPos;
-    this.textContent = "";
-    this.textBackColor = color(255, 255, 255,128);
-    this.textColor = color(10, 10, 50, 200);
-    this.font = createFont("Calibri", this.textSize, true);
-    this.textHeight = textAscent()+textDescent()+this.font.getSize();
-    this.barColor = this.textBackColor;
-    this.self = createGraphics((int)this.barWidth, (int)this.barHeight);
+ 
+  TextBar(float _leftPos, float _topPos, float _barWidth, float _barHeight) {
+    this.initFields();
+    this.init();
+  }
+  
+   TextBar(float _leftPos, float _topPos, float _barWidth, float _barHeight, Widget _parent) {
+    this.initFields();
     this.parent = _parent;
     this.parent.addChild(this);
     this.init();
   }
-
-  TextBar(float _leftPos, float _topPos, float _barWidth, float _barHeight) {
+  
+  private void initFields(){
     super(_topPos, _barWidth, _barHeight);
     this.leftPos = _leftPos;
     this.textContent = "";
@@ -40,7 +38,6 @@ public class TextBar extends Widget {
     this.textHeight = 0.8*textAscent()+0.8*textDescent()+this.font.getSize();
     this.barColor = this.textBackColor;
     this.self = createGraphics((int)this.barWidth, (int)this.barHeight);
-    this.init();
   }
   void init() {
     pushStyle();
