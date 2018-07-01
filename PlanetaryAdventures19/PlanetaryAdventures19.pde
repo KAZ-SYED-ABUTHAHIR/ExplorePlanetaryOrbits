@@ -6,9 +6,10 @@ Attractor sun;
 ArrayList<Planet> planets;
 SideBar sb;
 SideBar SB;
-TextBar txtBar,txtBarSB;
+TextBar txtBar, txtBarSB, txtBarsb;
+int highlightedPlanetIndex = 0;
 
-float zoomFactor = 1.0;
+float zoomFactor = 0.85; //This is the optimal zoom factor for speed...
 float zoomStep = 0.15;
 float pMouseX, pMouseY;
 
@@ -16,20 +17,25 @@ final boolean showOrbitPoints = false;
 PVector velocityAnchor  = new PVector(0, 0);
 
 void setup() {
-  size(720,720, P2D);
+  size(720, 720, P2D);
+
   smooth(8);
   background(0);
   frameRate(60);
-  sb = new SideBar(0,2*width/3,2*height/3);
-  SB = new SideBar(2*height/3,2*width/3,height/2);
-  
+  sb = new SideBar(0, 2*width/3, 2*height/3);
+  SB = new SideBar(2*height/3, 2*width/3, height/2);
+
   txtBar = new TextBar(10, 10, (sb.barWidth-sb.handleWidth-20), sb.barHeight/2-10);
-  txtBarSB = new TextBar(10, 10, (SB.barWidth-SB.handleWidth-20), SB.barHeight/2-10);
-  txtBarSB.setTextSize(18);
-  
+  txtBarsb = new TextBar(10, sb.barHeight/2+10, (sb.barWidth-sb.handleWidth-20), sb.barHeight/2-20);
+  txtBarSB = new TextBar(10, 10, (SB.barWidth-SB.handleWidth-20), SB.barHeight/5-10);
+  txtBarSB.setTextSize(16);
+  txtBarSB.setDynamicContent(true);
+
+  sb.addChild(txtBarsb);
   sb.addChild(txtBar);
   SB.addChild(txtBarSB);
-  
+  txtBarsb.setText("Processing is a flexible software sketchbook and a language for learning how to code within the context of the visual arts. Since 2001, Processing has promoted software literacy within the visual arts and visual literacy within technology. There are tens of thousands of students, artists, designers, researchers, and hobbyists who use Processing for learning and prototyping.");
+  txtBarsb.setTextSize(18);
   sun = new Attractor();
   planets = new ArrayList<Planet>();
   background(0);
@@ -55,7 +61,6 @@ void draw() {
       p.showVelocity();
       p.showAcceleration();
       //p.showVelocity(velocityAnchor);
-      
     }
     popMatrix();
     sb.render();
@@ -86,8 +91,23 @@ void keyPressed() {
       background(0);
     }
     catch(Exception e) {
-      //Who Cares?
+      //Who Cares? But Bad Practice !
     }
+  }
+   if (key == 'H'||key == 'h')
+  {
+    try{
+    planets.get(highlightedPlanetIndex++).setHighlighted(false);
+    if(highlightedPlanetIndex > (planets.size()-1)) highlightedPlanetIndex = 0;
+    planets.get(highlightedPlanetIndex).setHighlighted(true);
+    txtBar.setText( planets.get(highlightedPlanetIndex).orbitDescriptor, ':');
+    sb.setHandleColor( planets.get(highlightedPlanetIndex).planetColor);
+    }
+    catch(Exception e) {
+      //Who Cares? But Bad Practice !
+    }
+    
+    
   }
 }
 
@@ -135,10 +155,8 @@ void addNewPlanet(float vx, float vy) {
   catch(Exception e) {
     e.printStackTrace();
   }
+
   
-  txtBar.setText(p.orbitDescriptor,':');
-  //txtBarSB.setText("Processing is a flexible software sketchbook and a language for learning how to code within the context of the visual arts. Since 2001, Processing has promoted software literacy within the visual arts and visual literacy within technology. There are tens of thousands of students, artists, designers, researchers, and hobbyists who use Processing for learning and prototyping.");
-  sb.setHandleColor(p.planetColor);
   popMatrix();
 }
 
@@ -148,7 +166,7 @@ void drawScene() {
   scale(zoomFactor);
   translate(width/2*(1/zoomFactor), height/2*(1/zoomFactor));
   sun.show();
-  
+
   popMatrix();
   sb.render();
   SB.render();
@@ -156,5 +174,4 @@ void drawScene() {
 void mouseClicked() {
   sb.mouseClickedHandler();
   SB.mouseClickedHandler();
- 
 }

@@ -31,9 +31,11 @@ class Planet {  //<>// //<>// //<>//
   String name;
   color planetColor ;
 
-  Arrow velocityArrow ;
+  Arrow velocityArrow = new Arrow(0, 0, 0, 0);
   Arrow accelerationArrow  = new Arrow(0, 0, 0, 0);
   final static float velocityArrowScale = 40;
+  
+  boolean highlighted = false;
 
   //Constructors
 
@@ -93,6 +95,24 @@ class Planet {  //<>// //<>// //<>//
     fill(this.planetColor);
     noStroke();
     ellipse(this.position.x, this.position.y, this.size, this.size);
+    if(this.highlighted){
+      pushStyle();
+        float beginRed = red(this.planetColor);
+        float beginGreen = green(this.planetColor);
+        float beginBlue = blue(this.planetColor);
+        float endRed = 255-red(this.planetColor);
+        float endGreen = 255-green(this.planetColor);
+        float endBlue = 255-blue(this.planetColor);
+        color beginColor = color(beginRed,beginGreen,beginBlue);
+        color endColor = color(endRed,endGreen,endBlue);
+        noFill();
+        strokeWeight(2);
+        for(float i=0;i<=1;i+=0.05){
+        stroke(lerpColor(beginColor,endColor,i),map(i,0,1,255,0)); 
+        ellipse(this.position.x, this.position.y, this.size+20*i, this.size+20*i);
+        }
+      popStyle();
+    }
     popStyle();
   }
 
@@ -215,5 +235,9 @@ class Planet {  //<>// //<>// //<>//
   void showVelocity(PVector anchor) {
     velocityArrow.setArrow(anchor, this.velocity.copy().mult(velocityArrowScale));
     this.velocityArrow.show();
+  }
+  
+  void setHighlighted(boolean _highlighted){
+    this.highlighted = _highlighted;
   }
 }//CLASS_END

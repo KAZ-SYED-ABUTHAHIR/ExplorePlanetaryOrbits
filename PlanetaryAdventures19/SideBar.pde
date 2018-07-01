@@ -22,7 +22,7 @@ public class SideBar extends Widget
     this.leftPos = -this.barWidth + this.handleWidth;
     this.topPos = height*this.relTopPos;
 
-    this.barColor = color(100, 150, 200, 32);
+    this.barColor = color(10, 25, 10, 32);
     this.handleColor = color(255, 0, 255, 64);
     this.self = createGraphics((int)this.barWidth, (int)this.barHeight);
     this.init();
@@ -32,10 +32,10 @@ public class SideBar extends Widget
     super(_topPos, _barWidth, _barHeight);
 
     
-    this.handleWidth = 15;
+    this.handleWidth = 10;
     this.leftPos = -this.barWidth + this.handleWidth;
 
-    this.barColor = color(100, 150, 200, 32);
+    this.barColor = color(10, 25, 10, 32);
     this.handleColor = color(255, 0, 255, 64);
     this.self = createGraphics((int)this.barWidth, (int)this.barHeight);
     this.animSpeed = 0.2;
@@ -53,12 +53,12 @@ public class SideBar extends Widget
     //New hande Drawing...
     pushStyle();
     self.noFill();
-    self.strokeJoin(BEVEL);
+    //self.strokeJoin(BEVEL);
     float beginX = this.barWidth-this.handleWidth/2;
     
     for(float i=-this.handleWidth/2;i<this.handleWidth/2+2;i++){
       self.stroke(red(this.handleColor),green(this.handleColor),blue(this.handleColor)
-                  ,abs(255-abs(map(i,-handleWidth/2,handleWidth/2,-300,300))));
+                  ,abs(155-abs(map(i,-handleWidth/2,handleWidth/2,-100,100))));
      this.self.line(beginX+i,0,beginX+i,this.barHeight);
      
     }
@@ -72,13 +72,13 @@ public class SideBar extends Widget
     self.endDraw();
     
     popStyle();
-  //   if (this.children.size()>0) {
+    // if (this.children.size()>0) {
 
-  //    for (Widget w : this.children) {
-  //      w.init();
-  //      //self.image(w.self, w.leftPos, w.topPos);
-  //    }
-  //  } is this needed or not SERIOUSLY? in render this is required but not here I hope...
+    //  for (Widget w : this.children) {
+    //    w.init();
+    //    //self.image(w.self, w.leftPos, w.topPos);
+    //  }
+    //} //is this needed or not SERIOUSLY? in render this is required but not here I hope...
   this.buffer = this.self.get();
   }
 
@@ -168,6 +168,9 @@ public class SideBar extends Widget
     this.children.add(child);
     child.setParent(this);
     child.init();
+    //DEBUG CODE
+    // println(this.children.size());
+    //printArray(Thread.currentThread().getStackTrace());
   }
   
 }//EOC

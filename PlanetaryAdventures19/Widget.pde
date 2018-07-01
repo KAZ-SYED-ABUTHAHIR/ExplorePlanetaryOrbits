@@ -3,6 +3,7 @@ abstract public class Widget {
   ArrayList<Widget> children = new ArrayList<Widget>();
   PGraphics self; //Main graphic surface to draw on...
   PImage buffer = null;//Buffer to hold self
+  float handleWidth; //dummy
   float barWidth; //Width of the Widget
   float barHeight; //Height of the Widget
   float leftPos;  //x coordinate of the left extreme of the Widget
@@ -11,6 +12,7 @@ abstract public class Widget {
   float relLeftPos=0; // Relative position from the parent/container left as a fraction of parents width
   color barColor ; // Background color of the Widget
   PImage img; // Optional background image can be set.
+  
   Widget(float _topPos,float _barWidth,float _barHeight){
     
     this.topPos = _topPos;

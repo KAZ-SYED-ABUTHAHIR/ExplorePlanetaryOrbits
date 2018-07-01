@@ -12,9 +12,10 @@ public class TextBar extends Widget {
   float topPadding = 10;
   float bottomPadding = 10;
   float textSize = 14;
-  boolean borderless = false;
+  boolean borderless = true;
   boolean textDelimited ; //is this necessary?
   char delimiter;
+  boolean dynamicContent = false;
 
   TextBar(float _leftPos, float _topPos, float _barWidth, float _barHeight, Widget _parent) {
     super(_leftPos, _topPos, _barWidth, _barHeight);
@@ -32,12 +33,13 @@ public class TextBar extends Widget {
 
   private void initFields() {
     this.textContent = "";
-    this.textBackColor = color(255, 255, 255, 12);
-    this.textColor = color(210, 210, 250, 200);
+    this.textBackColor = color(5, 15, 10, 128);
+    this.textColor = color(200, 200, 200, 255);
     this.font = createFont("Calibri", this.textSize, true);
     this.textHeight = textAscent()+textDescent()+this.font.getSize();
     this.barColor = this.textBackColor;
     this.self = createGraphics((int)this.barWidth, (int)this.barHeight);
+    this.self.smooth(8);
   }
   void init() {
     pushStyle();
@@ -61,13 +63,23 @@ public class TextBar extends Widget {
   }
 
   void render() {
+
     this.parent.self.beginDraw();
-    //this.parent.self.tint(50,100,200,4);
-    this.parent.self.background(this.parent.barColor);//Danger !!! Gossamer Effect <> Danger I think I solved this...
+
+    //this.parent.self.clip(0,0,this.parent.barWidth-this.parent.handleWidth,this.parent.barHeight);
+    if (this.dynamicContent) {
+      this.parent.self.tint(255, 255, 255, 255);
+    } else {
+      this.parent.self.tint(255, 255, 255, 4);
+    }
+
+    //this.parent.self.background(this.parent.barColor);//Danger !!! Gossamer Effect <> Danger I think I solved this... No there is a heavier bug
     this.parent.self.image(this.parent.buffer, 0, 0);
     this.parent.self.image(this.self, this.leftPos, this.topPos); 
     this.parent.self.endDraw();
+    //this.parent.buffer = this.parent.self.get();
   }
+
 
   void printText(String str) {
     if (str.length()==0) return;
@@ -113,9 +125,9 @@ public class TextBar extends Widget {
     String leftStr = splitString[1];
     String rightStr = splitString[2];
     //Wonderfull defugging tools ahead !
-    println(headerStr + " "+ millis()); // Why this is printed twice?
-    printArray(Thread.currentThread().getStackTrace());
-
+    //println(headerStr + " "+ millis()); // Why this is printed twice?
+    //printArray(Thread.currentThread().getStackTrace()); //Found out through stack trace
+    //
     pushStyle();
 
     self.beginDraw();
@@ -248,5 +260,9 @@ public class TextBar extends Widget {
   void setleftPadding(float _leftPadding) {
     this.leftPadding = _leftPadding;
     this.init();
+  }
+  
+  void setDynamicContent(boolean _dynamicContent){
+    this.dynamicContent = _dynamicContent;
   }
 }//EOC
