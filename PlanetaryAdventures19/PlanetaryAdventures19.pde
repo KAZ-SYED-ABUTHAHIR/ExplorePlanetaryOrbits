@@ -7,7 +7,7 @@ ArrayList<Planet> planets;
 SideBar sb;
 SideBar SB;
 TextBar txtBar, txtBarSB, txtBarsb;
-int highlightedPlanetIndex = 0;
+int highlightedPlanetIndex = -1;
 
 float zoomFactor = 0.85; //This is the optimal zoom factor for speed...
 float zoomStep = 0.15;
@@ -22,20 +22,27 @@ void setup() {
   smooth(8);
   background(0);
   frameRate(60);
-  sb = new SideBar(0, 2*width/3, 2*height/3);
+  sb = new SideBar(0, 2.5*width/3, 2*height/3);
   SB = new SideBar(2*height/3, 2*width/3, height/2);
 
   txtBar = new TextBar(10, 10, (sb.barWidth-sb.handleWidth-20), sb.barHeight/2-10);
   txtBarsb = new TextBar(10, sb.barHeight/2+10, (sb.barWidth-sb.handleWidth-20), sb.barHeight/2-20);
-  txtBarSB = new TextBar(10, 10, (SB.barWidth-SB.handleWidth-20), SB.barHeight/5-10);
+  txtBarSB = new TextBar(10, 10, (SB.barWidth-SB.handleWidth-20), SB.barHeight/3-10);
   txtBarSB.setTextSize(16);
   txtBarSB.setDynamicContent(true);
 
   sb.addChild(txtBarsb);
   sb.addChild(txtBar);
   SB.addChild(txtBarSB);
-  txtBarsb.setText("Processing is a flexible software sketchbook and a language for learning how to code within the context of the visual arts. Since 2001, Processing has promoted software literacy within the visual arts and visual literacy within technology. There are tens of thousands of students, artists, designers, researchers, and hobbyists who use Processing for learning and prototyping.");
-  txtBarsb.setTextSize(18);
+  //txtBarsb.setText("Processing is a flexible software sketchbook and a language for learning how to code within the context of the visual arts. Since 2001, Processing has promoted software literacy within the visual arts and visual literacy within technology. There are tens of thousands of students, artists, designers, researchers, and hobbyists who use Processing for learning and prototyping.");
+  String message = "Interactivity\n\n" +
+                   "Click and drag to add a Planet. The arrow represents velocity vector.\n" +
+                   "Press \'h\'or \'H\' to cycle through planets for highlighting.\n" + 
+                   "Press \'d\'or \'D\' to delete the highlighted planet.\n" + 
+                   "Orbital parameters for highlighted planets are show in the above text field";
+   
+  txtBarsb.setText(message); 
+  txtBarsb.setTextSize(17);
   sun = new Attractor();
   planets = new ArrayList<Planet>();
   background(0);
@@ -65,9 +72,10 @@ void draw() {
     popMatrix();
     sb.render();
     SB.render();
-    if(frameCount%10 == 0)
-    txtBarSB.setText("Frame Rate   : " + String.format("%.02f",frameRate) +
-                   "\nZoom Factor : " + String.format("%.02f",zoomFactor));
+    if (frameCount%10 == 0)
+      txtBarSB.setText("Frame Rate   : " + String.format("%.02f", frameRate) +
+        "\nZoom Factor : " + String.format("%.02f", zoomFactor)+
+        "\nhighlightedPlanetIndex: "+highlightedPlanetIndex);
   }//END IF
 }
 
@@ -86,29 +94,35 @@ void keyPressed() {
   } 
   if (key == 'D'||key == 'd')
   {
-    try {
-      planets.remove(planets.size()-1);
+
+    if (planets.size()>0) {
+      planets.remove(planets.get(highlightedPlanetIndex++));
+      if (highlightedPlanetIndex > (planets.size()-1)) highlightedPlanetIndex = 0;
+      if (planets.size()>0) {
+       
+        selectPlanet(highlightedPlanetIndex);
+      } else {
+        txtBar.setText("NO PLANETS AVAILABLE !");
+        highlightedPlanetIndex = -1;
+      }
       background(0);
     }
-    catch(Exception e) {
-      //Who Cares? But Bad Practice !
-    }
   }
-   if (key == 'H'||key == 'h')
+  if (key == 'H'||key == 'h')
   {
-    try{
-    planets.get(highlightedPlanetIndex++).setHighlighted(false);
-    if(highlightedPlanetIndex > (planets.size()-1)) highlightedPlanetIndex = 0;
-    planets.get(highlightedPlanetIndex).setHighlighted(true);
-    txtBar.setText( planets.get(highlightedPlanetIndex).orbitDescriptor, ':');
-    sb.setHandleColor( planets.get(highlightedPlanetIndex).planetColor);
+    if (planets.size()>0) {
+      planets.get(highlightedPlanetIndex++).setHighlighted(false);
+      if (highlightedPlanetIndex > (planets.size()-1)) highlightedPlanetIndex = 0;
+      selectPlanet(highlightedPlanetIndex);
+     
     }
-    catch(Exception e) {
-      //Who Cares? But Bad Practice !
-    }
-    
-    
   }
+}
+
+void selectPlanet(int index) {
+  planets.get(index).setHighlighted(true);
+  txtBar.setText( planets.get(index).orbitDescriptor, ':');
+  sb.setHandleColor( planets.get(index).planetColor);
 }
 
 void mouseDragged() {
@@ -156,7 +170,10 @@ void addNewPlanet(float vx, float vy) {
     e.printStackTrace();
   }
 
-  
+  if(planets.size()==1) {
+    highlightedPlanetIndex = 0;
+    selectPlanet(highlightedPlanetIndex);
+  }
   popMatrix();
 }
 

@@ -108,7 +108,7 @@ class Planet {  //<>// //<>// //<>//
         noFill();
         strokeWeight(2);
         for(float i=0;i<=1;i+=0.05){
-        stroke(lerpColor(beginColor,endColor,i),map(i,0,1,255,0)); 
+        stroke(lerpColor(beginColor,endColor,i),map(i,0,1,-128,255)); 
         ellipse(this.position.x, this.position.y, this.size+20*i, this.size+20*i);
         }
       popStyle();

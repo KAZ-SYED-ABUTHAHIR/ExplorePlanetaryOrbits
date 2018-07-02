@@ -1,4 +1,4 @@
-abstract public class Widget {
+public abstract  class Widget {
   Widget parent = null;
   ArrayList<Widget> children = new ArrayList<Widget>();
   PGraphics self; //Main graphic surface to draw on...
@@ -33,6 +33,7 @@ abstract public class Widget {
   
   abstract void init();
   abstract void render();
+ 
   abstract boolean inFocus();
   abstract void mouseClickedHandler();
   abstract void addChild(Widget child);

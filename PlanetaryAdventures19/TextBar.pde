@@ -33,7 +33,7 @@ public class TextBar extends Widget {
 
   private void initFields() {
     this.textContent = "";
-    this.textBackColor = color(5, 15, 10, 128);
+    this.textBackColor = color(5, 15, 10, 64);
     this.textColor = color(200, 200, 200, 255);
     this.font = createFont("Calibri", this.textSize, true);
     this.textHeight = textAscent()+textDescent()+this.font.getSize();
@@ -63,22 +63,30 @@ public class TextBar extends Widget {
   }
 
   void render() {
-
+   
+     
     this.parent.self.beginDraw();
-
-    //this.parent.self.clip(0,0,this.parent.barWidth-this.parent.handleWidth,this.parent.barHeight);
-    if (this.dynamicContent) {
-      this.parent.self.tint(255, 255, 255, 255);
-    } else {
-      this.parent.self.tint(255, 255, 255, 4);
-    }
-
-    //this.parent.self.background(this.parent.barColor);//Danger !!! Gossamer Effect <> Danger I think I solved this... No there is a heavier bug
+    this.parent.self.pushStyle();
+    
+    
+    //this.parent.self.background(this.parent.barColor); //This solution seems to be good NOOOO
+    //if (this.dynamicContent) {
+    //  this.parent.self.tint(255, 255, 255, 255);
+    //} else {
+    //  this.parent.self.tint(255, 255, 255, 8);
+    //}
+    
+   //If I'm the first child, It is my duty to clear up the mess before rendering me...
+   if(this.parent.children.indexOf(this) == 0) //This is my long sought solution...Thank God...
+    this.parent.self.background(this.parent.barColor);//Danger !!! Gossamer Effect <> Danger I think I solved this... No there is a heavier bug
+   
     this.parent.self.image(this.parent.buffer, 0, 0);
     this.parent.self.image(this.self, this.leftPos, this.topPos); 
+    this.parent.self.popStyle();
     this.parent.self.endDraw();
     //this.parent.buffer = this.parent.self.get();
   }
+
 
 
   void printText(String str) {
@@ -87,7 +95,7 @@ public class TextBar extends Widget {
       this.printTextDelimited(str);
       return;
     } 
-
+    //printArray(Thread.currentThread().getStackTrace());
 
     pushStyle();
     self.beginDraw();
@@ -104,7 +112,7 @@ public class TextBar extends Widget {
 
     float fieldWidth = (this.barWidth-this.rightPadding-this.leftPadding);
     float fieldHeight = (this.barHeight-this.topPadding-this.bottomPadding);
-
+ 
     self.textAlign(LEFT, TOP);
     self.fill(this.textBackColor);
     self.rect(0, 0, this.barWidth, this.barHeight);
@@ -150,6 +158,7 @@ public class TextBar extends Widget {
     float fieldWidthHeader = (this.barWidth-this.rightPadding-this.leftPadding);
     float fieldHeightHeader = (headerHeight-this.topPadding-this.bottomPadding);
     fieldHeight -= headerHeight;
+    
     self.textAlign(CENTER, CENTER);
     self.fill(this.textBackColor);
     self.rect(0, 0, this.barWidth, headerHeight);
@@ -226,8 +235,6 @@ public class TextBar extends Widget {
       rightStr += this.delimiter+" "+lineParts[1]+"\n";
     }
     headerStr = lines[0];
-    //leftStr = "\n" + leftStr;
-    //rightStr =  "\n" + rightStr;
     splitString[0] = headerStr;
     splitString[1] = leftStr;
     splitString[2] = rightStr;
@@ -261,8 +268,8 @@ public class TextBar extends Widget {
     this.leftPadding = _leftPadding;
     this.init();
   }
-  
-  void setDynamicContent(boolean _dynamicContent){
+
+  void setDynamicContent(boolean _dynamicContent) {
     this.dynamicContent = _dynamicContent;
   }
 }//EOC

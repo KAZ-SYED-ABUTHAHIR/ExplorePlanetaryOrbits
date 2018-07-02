@@ -2,7 +2,7 @@
 
 public class SideBar extends Widget
 {
-  
+
   float handleWidth; //Width of the handle to pull out the side bar
   float animSpeed ; // Easing speed of the sliding action of the side bar
 
@@ -14,7 +14,7 @@ public class SideBar extends Widget
 
   SideBar() {
     super();
-    
+
     this.animSpeed = 0.2;
     this.barWidth = 2*width/3;
     this.barHeight = height/2;
@@ -31,7 +31,7 @@ public class SideBar extends Widget
   SideBar(float _topPos, float _barWidth, float _barHeight) {
     super(_topPos, _barWidth, _barHeight);
 
-    
+
     this.handleWidth = 10;
     this.leftPos = -this.barWidth + this.handleWidth;
 
@@ -55,12 +55,11 @@ public class SideBar extends Widget
     self.noFill();
     //self.strokeJoin(BEVEL);
     float beginX = this.barWidth-this.handleWidth/2;
-    
-    for(float i=-this.handleWidth/2;i<this.handleWidth/2+2;i++){
-      self.stroke(red(this.handleColor),green(this.handleColor),blue(this.handleColor)
-                  ,abs(155-abs(map(i,-handleWidth/2,handleWidth/2,-100,100))));
-     this.self.line(beginX+i,0,beginX+i,this.barHeight);
-     
+
+    for (float i=-this.handleWidth/2; i<this.handleWidth/2+2; i++) {
+      self.stroke(red(this.handleColor), green(this.handleColor), blue(this.handleColor)
+        , abs(155-abs(map(i, -handleWidth/2, handleWidth/2, -100, 100))));
+      this.self.line(beginX+i, 0, beginX+i, this.barHeight);
     }
     popStyle();
     //
@@ -70,21 +69,30 @@ public class SideBar extends Widget
       self.image(this.img, 0, 0, this.barWidth-this.handleWidth, this.barHeight);
     }
     self.endDraw();
-    
-    popStyle();
-    // if (this.children.size()>0) {
 
-    //  for (Widget w : this.children) {
-    //    w.init();
-    //    //self.image(w.self, w.leftPos, w.topPos);
-    //  }
-    //} //is this needed or not SERIOUSLY? in render this is required but not here I hope...
-  this.buffer = this.self.get();
+    popStyle();
+     if (this.children.size()>0) {
+
+      for (Widget w : this.children) {
+        w.init();
+        self.image(w.self, w.leftPos, w.topPos);
+      }
+    } //is this needed or not SERIOUSLY? in render this is required but not here I hope...
+    this.buffer = this.self.get();
   }
 
-
+ //public void renderChildren(Widget w) {
+ //   if (this.children.size()>0) {
+ //      int j = children.indexOf(w);
+ //     for (int i=0; i<this.children.size()-1; i++) {
+ //       Widget o=this.children.get(i);
+ //       if(i != j) o.render();
+ //     }
+ //   }
+ // }
+ 
   void render() {
-    
+
     if (this.children.size()>0) {
 
       for (Widget w : this.children) {
@@ -92,7 +100,7 @@ public class SideBar extends Widget
         //self.image(w.self, w.leftPos, w.topPos);
       }
     }
-    
+
     image(this.self, this.leftPos, this.topPos);
     float target = (this.slide<0)?(-this.barWidth+this.handleWidth):(0);
     float diff = abs(target-this.leftPos);
@@ -121,9 +129,9 @@ public class SideBar extends Widget
     this.handleColor = color(red(c), green(c), blue(c), 184);
     this.init();
   }
-  
-  void drawHandle(){
-     //NEW
+
+  void drawHandle() {
+    //NEW
     self.noStroke();
     self.fill(this.handleColor);
     self.rect(this.barWidth-this.handleWidth, 0, handleWidth, this.barHeight);
@@ -172,5 +180,4 @@ public class SideBar extends Widget
     // println(this.children.size());
     //printArray(Thread.currentThread().getStackTrace());
   }
-  
 }//EOC
