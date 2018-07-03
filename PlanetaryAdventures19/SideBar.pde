@@ -35,8 +35,8 @@ public class SideBar extends Widget
     this.handleWidth = 10;
     this.leftPos = -this.barWidth + this.handleWidth;
 
-    this.barColor = color(10, 25, 10, 32);
-    this.handleColor = color(255, 0, 255, 64);
+    this.barColor = color(10, 25, 10, 128);
+    this.handleColor = color(255, 0, 255, 16);
     this.self = createGraphics((int)this.barWidth, (int)this.barHeight);
     this.animSpeed = 0.2;
 

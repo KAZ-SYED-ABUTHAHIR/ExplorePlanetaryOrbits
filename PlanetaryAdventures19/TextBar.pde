@@ -33,7 +33,7 @@ public class TextBar extends Widget {
 
   private void initFields() {
     this.textContent = "";
-    this.textBackColor = color(5, 15, 10, 100);
+    this.textBackColor = color(5, 25, 10, 100);
     this.textColor = color(200, 200, 200, 255);
     this.font = createFont("Calibri", this.textSize, true);
     this.textHeight = textAscent()+textDescent()+this.font.getSize();
@@ -72,13 +72,13 @@ public class TextBar extends Widget {
 
    //If I'm the first child, It is my duty to clear up the mess before rendering me...
    if(this.parent.children.indexOf(this) == 0) //This is my long sought solution...Thank God...
-    this.parent.self.background(this.parent.barColor);//Danger !!! Gossamer Effect <> Danger I think I solved this... No there is a heavier bug
-   
+    {
+    this.parent.self.clear();
     this.parent.self.image(this.parent.buffer, 0, 0);
+    }
     this.parent.self.image(this.self, this.leftPos, this.topPos); 
     this.parent.self.popStyle();
     this.parent.self.endDraw();
-    //this.parent.buffer = this.parent.self.get();
   }
 
 

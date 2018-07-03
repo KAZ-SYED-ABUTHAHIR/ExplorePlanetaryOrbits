@@ -34,7 +34,7 @@ class Planet {  //<>// //<>// //<>//
   Arrow velocityArrow = new Arrow(0, 0, 0, 0);
   Arrow accelerationArrow  = new Arrow(0, 0, 0, 0);
   final static float velocityArrowScale = 40;
-  
+
   boolean highlighted = false;
 
   //Constructors
@@ -95,22 +95,22 @@ class Planet {  //<>// //<>// //<>//
     fill(this.planetColor);
     noStroke();
     ellipse(this.position.x, this.position.y, this.size, this.size);
-    if(this.highlighted){
+    if (this.highlighted) {
       pushStyle();
-        float beginRed = red(this.planetColor);
-        float beginGreen = green(this.planetColor);
-        float beginBlue = blue(this.planetColor);
-        float endRed = 255-red(this.planetColor);
-        float endGreen = 255-green(this.planetColor);
-        float endBlue = 255-blue(this.planetColor);
-        color beginColor = color(beginRed,beginGreen,beginBlue);
-        color endColor = color(endRed,endGreen,endBlue);
-        noFill();
-        strokeWeight(2);
-        for(float i=0;i<=1;i+=0.05){
-        stroke(lerpColor(beginColor,endColor,i),map(i,0,1,-128,255)); 
+      float beginRed = red(this.planetColor);
+      float beginGreen = green(this.planetColor);
+      float beginBlue = blue(this.planetColor);
+      float endRed = 255-red(this.planetColor);
+      float endGreen = 255-green(this.planetColor);
+      float endBlue = 255-blue(this.planetColor);
+      color beginColor = color(beginRed, beginGreen, beginBlue);
+      color endColor = color(endRed, endGreen, endBlue);
+      noFill();
+      strokeWeight(2);
+      for (float i=0; i<=1; i+=0.05) {
+        stroke(lerpColor(beginColor, endColor, i), map(i, 0, 1, -128, 255)); 
         ellipse(this.position.x, this.position.y, this.size+20*i, this.size+20*i);
-        }
+      }
       popStyle();
     }
     popStyle();
@@ -182,7 +182,7 @@ class Planet {  //<>// //<>// //<>//
     // "\u00B0" ---> Degree Symbol
     this.orbitDescriptor += "Max Angle               : "+String.format("%.02f", this.maxAngle) + "\u00B0" + "\n";
     this.orbitDescriptor += "Min Angle               : "+String.format("%.02f", this.minAngle) + "\u00B0" + "\n"; 
-    this.orbitPoints.clear();
+    //this.orbitPoints.clear(); //If you need orbitPoints don't clear it !!!
   }
 
   void calcPolarOrbit(Attractor a) {//Not used Remove
@@ -205,15 +205,20 @@ class Planet {  //<>// //<>// //<>//
     rotate(radians(this.minAngle));
     ellipse(0, 0, 2*this.semiMajorAxis, 2*this.semiMinorAxis);
     popMatrix();
-    if (showPoints) {
-      stroke(0, 0, 255, 255);
-      strokeWeight(20);
-      point(orbitPoints.get(minIndex).x, orbitPoints.get(minIndex).y);
-      stroke(255, 100, 0, 255);
-      point(orbitPoints.get(maxIndex).x, orbitPoints.get(maxIndex).y);
-      stroke(255, 100, 255, 255);
-      point(this.orbitCenter.x, this.orbitCenter.y);
-      popStyle();
+    try {
+      if (showPoints) {
+        stroke(0, 0, 255, 255);
+        strokeWeight(20);
+        point(orbitPoints.get(minIndex).x, orbitPoints.get(minIndex).y);
+        stroke(255, 100, 0, 255);
+        point(orbitPoints.get(maxIndex).x, orbitPoints.get(maxIndex).y);
+        stroke(255, 100, 255, 255);
+        point(this.orbitCenter.x, this.orbitCenter.y);
+        popStyle();
+      }
+    }
+    catch(Exception e){
+      e.printStackTrace();
     }
   }
 
@@ -236,8 +241,8 @@ class Planet {  //<>// //<>// //<>//
     velocityArrow.setArrow(anchor, this.velocity.copy().mult(velocityArrowScale));
     this.velocityArrow.show();
   }
-  
-  void setHighlighted(boolean _highlighted){
+
+  void setHighlighted(boolean _highlighted) {
     this.highlighted = _highlighted;
   }
 }//CLASS_END

@@ -10,10 +10,10 @@ TextBar txtBar, txtBarSB, txtBarsb;
 int highlightedPlanetIndex = -1;
 
 float zoomFactor = 0.85; //This is the optimal zoom factor for speed...
-float zoomStep = 0.15;
+float zoomStep = 0.01;
 float pMouseX, pMouseY;
 
-final boolean showOrbitPoints = false;
+final boolean showOrbitPoints = true;
 PVector velocityAnchor  = new PVector(0, 0);
 
 void setup() {
@@ -22,6 +22,7 @@ void setup() {
   smooth(8);
   background(0);
   frameRate(60);
+  surface.setTitle("PLANETARY ADVENTURES: KEPLER'S PARADISE");
   sb = new SideBar(0, 2.5*width/3, 2*height/3);
   SB = new SideBar(2*height/3, 2*width/3, height/2);
 
@@ -29,18 +30,17 @@ void setup() {
   txtBarsb = new TextBar(10, sb.barHeight/2+10, (sb.barWidth-sb.handleWidth-20), sb.barHeight/2-20);
   txtBarSB = new TextBar(10, 10, (SB.barWidth-SB.handleWidth-20), SB.barHeight/2-10);
   txtBarSB.setTextSize(16);
-  
 
   sb.addChild(txtBarsb);
   sb.addChild(txtBar);
   SB.addChild(txtBarSB);
-  //txtBarsb.setText("Processing is a flexible software sketchbook and a language for learning how to code within the context of the visual arts. Since 2001, Processing has promoted software literacy within the visual arts and visual literacy within technology. There are tens of thousands of students, artists, designers, researchers, and hobbyists who use Processing for learning and prototyping.");
+  
   String message = "Interactivity\n\n" +
-                   "Click and drag to add a Planet. The arrow represents velocity vector.\n" +
-                   "Press \'h\'or \'H\' to cycle through planets for highlighting.\n" + 
-                   "Press \'d\'or \'D\' to delete the highlighted planet.\n" + 
-                   "Orbital parameters for highlighted planets are show in the above text field";
-   
+    "Click and drag to add a Planet. The arrow represents the velocity vector.\n" +
+    "Press \'h\'or \'H\' to cycle through planets for highlighting.\n" + 
+    "Press \'d\'or \'D\' to delete the highlighted planet.\n" + 
+    "Orbital parameters for the highlighted planet are shown in the above text field";
+
   txtBarsb.setText(message); 
   txtBarsb.setTextSize(17);
   sun = new Attractor();
@@ -50,10 +50,10 @@ void setup() {
 
 void draw() {
   if (!mousePressed || sb.inFocus()) {
-    //fill(0, 128);
-    //noStroke();
-    //rect(0, 0, width, height);
-    background(0);
+    fill(0, 128);
+    noStroke();
+    rect(0, 0, width, height);
+   // background(0);
     pushMatrix();
     scale(zoomFactor);
     translate(width/2*(1/zoomFactor), height/2*(1/zoomFactor));
@@ -72,16 +72,14 @@ void draw() {
     popMatrix();
     sb.render();
     SB.render();
-    if (frameCount%10 == 0){
+    if (frameCount%10 == 0) {
       String debugMsg = "Debug Parameters"+
-                        "\nFrame Rate   : " + String.format("%.02f", frameRate) +
-                        "\nZoom Factor : " + String.format("%.02f", zoomFactor)+
-                        "\nhighlightedPlanetIndex : " + highlightedPlanetIndex;
-      txtBarSB.setText(debugMsg, ':');    
-      //if(highlightedPlanetIndex>-1)
-      //txtBarSB.setText(planets.get(highlightedPlanetIndex).orbitDescriptor, ':');
+        "\nFrame Rate   : " + String.format("%.02f", frameRate) +
+        "\nZoom Factor : " + String.format("%.02f", zoomFactor)+
+        "\nhighlightedPlanetIndex : " + highlightedPlanetIndex;
+      txtBarSB.setText(debugMsg, ':');
     }
-  }//END IF
+  }
 }
 
 
@@ -104,7 +102,7 @@ void keyPressed() {
       planets.remove(planets.get(highlightedPlanetIndex++));
       if (highlightedPlanetIndex > (planets.size()-1)) highlightedPlanetIndex = 0;
       if (planets.size()>0) {
-       
+
         selectPlanet(highlightedPlanetIndex);
       } else {
         txtBar.setText("NO PLANETS AVAILABLE !");
@@ -119,7 +117,6 @@ void keyPressed() {
       planets.get(highlightedPlanetIndex++).setHighlighted(false);
       if (highlightedPlanetIndex > (planets.size()-1)) highlightedPlanetIndex = 0;
       selectPlanet(highlightedPlanetIndex);
-     
     }
   }
 }
@@ -175,7 +172,7 @@ void addNewPlanet(float vx, float vy) {
     e.printStackTrace();
   }
 
-  if(planets.size()==1) {
+  if (planets.size()==1) {
     highlightedPlanetIndex = 0;
     selectPlanet(highlightedPlanetIndex);
   }
@@ -190,9 +187,8 @@ void drawScene() {
   sun.show();
 
   popMatrix();
-  //sb.render();
-  //SB.render();
-  
+  sb.render();
+  SB.render();
 }//Could Multi threading help here?
 void mouseClicked() {
   sb.mouseClickedHandler();
