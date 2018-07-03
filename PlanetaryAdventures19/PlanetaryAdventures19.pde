@@ -27,9 +27,9 @@ void setup() {
 
   txtBar = new TextBar(10, 10, (sb.barWidth-sb.handleWidth-20), sb.barHeight/2-10);
   txtBarsb = new TextBar(10, sb.barHeight/2+10, (sb.barWidth-sb.handleWidth-20), sb.barHeight/2-20);
-  txtBarSB = new TextBar(10, 10, (SB.barWidth-SB.handleWidth-20), SB.barHeight/3-10);
+  txtBarSB = new TextBar(10, 10, (SB.barWidth-SB.handleWidth-20), SB.barHeight/2-10);
   txtBarSB.setTextSize(16);
-  txtBarSB.setDynamicContent(true);
+  
 
   sb.addChild(txtBarsb);
   sb.addChild(txtBar);
@@ -72,10 +72,15 @@ void draw() {
     popMatrix();
     sb.render();
     SB.render();
-    if (frameCount%10 == 0)
-      txtBarSB.setText("Frame Rate   : " + String.format("%.02f", frameRate) +
-        "\nZoom Factor : " + String.format("%.02f", zoomFactor)+
-        "\nhighlightedPlanetIndex: "+highlightedPlanetIndex);
+    if (frameCount%10 == 0){
+      String debugMsg = "Debug Parameters"+
+                        "\nFrame Rate   : " + String.format("%.02f", frameRate) +
+                        "\nZoom Factor : " + String.format("%.02f", zoomFactor)+
+                        "\nhighlightedPlanetIndex : " + highlightedPlanetIndex;
+      txtBarSB.setText(debugMsg, ':');    
+      //if(highlightedPlanetIndex>-1)
+      //txtBarSB.setText(planets.get(highlightedPlanetIndex).orbitDescriptor, ':');
+    }
   }//END IF
 }
 
@@ -185,8 +190,9 @@ void drawScene() {
   sun.show();
 
   popMatrix();
-  sb.render();
-  SB.render();
+  //sb.render();
+  //SB.render();
+  
 }//Could Multi threading help here?
 void mouseClicked() {
   sb.mouseClickedHandler();

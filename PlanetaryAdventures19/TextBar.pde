@@ -15,7 +15,7 @@ public class TextBar extends Widget {
   boolean borderless = true;
   boolean textDelimited ; //is this necessary?
   char delimiter;
-  boolean dynamicContent = false;
+  
 
   TextBar(float _leftPos, float _topPos, float _barWidth, float _barHeight, Widget _parent) {
     super(_leftPos, _topPos, _barWidth, _barHeight);
@@ -33,7 +33,7 @@ public class TextBar extends Widget {
 
   private void initFields() {
     this.textContent = "";
-    this.textBackColor = color(5, 15, 10, 64);
+    this.textBackColor = color(5, 15, 10, 100);
     this.textColor = color(200, 200, 200, 255);
     this.font = createFont("Calibri", this.textSize, true);
     this.textHeight = textAscent()+textDescent()+this.font.getSize();
@@ -69,13 +69,7 @@ public class TextBar extends Widget {
     this.parent.self.pushStyle();
     
     
-    //this.parent.self.background(this.parent.barColor); //This solution seems to be good NOOOO
-    //if (this.dynamicContent) {
-    //  this.parent.self.tint(255, 255, 255, 255);
-    //} else {
-    //  this.parent.self.tint(255, 255, 255, 8);
-    //}
-    
+
    //If I'm the first child, It is my duty to clear up the mess before rendering me...
    if(this.parent.children.indexOf(this) == 0) //This is my long sought solution...Thank God...
     this.parent.self.background(this.parent.barColor);//Danger !!! Gossamer Effect <> Danger I think I solved this... No there is a heavier bug
@@ -92,7 +86,13 @@ public class TextBar extends Widget {
   void printText(String str) {
     if (str.length()==0) return;
     if (this.textDelimited) {
+      try{
       this.printTextDelimited(str);
+      }
+      catch(Exception e){
+        e.printStackTrace();
+        this.setText("FORMAT ERROR !");
+      }
       return;
     } 
     //printArray(Thread.currentThread().getStackTrace());
@@ -269,7 +269,5 @@ public class TextBar extends Widget {
     this.init();
   }
 
-  void setDynamicContent(boolean _dynamicContent) {
-    this.dynamicContent = _dynamicContent;
-  }
+
 }//EOC

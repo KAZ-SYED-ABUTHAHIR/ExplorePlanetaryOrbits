@@ -185,7 +185,7 @@ class Planet {  //<>// //<>// //<>//
     this.orbitPoints.clear();
   }
 
-  void calcPolarOrbit(Attractor a) {
+  void calcPolarOrbit(Attractor a) {//Not used Remove
     pushMatrix();
     translate(a.position.x, a.position.y);
     PVector radial = PVector.sub(this.position, a.position);
