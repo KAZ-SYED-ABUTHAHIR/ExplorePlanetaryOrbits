@@ -12,10 +12,10 @@ public class TextBar extends Widget {
   float topPadding = 10;
   float bottomPadding = 10;
   float textSize = 14;
-  boolean borderless = true;
+  boolean borderless = false;
   boolean textDelimited ; //is this necessary?
   char delimiter;
-  
+
 
   TextBar(float _leftPos, float _topPos, float _barWidth, float _barHeight, Widget _parent) {
     super(_leftPos, _topPos, _barWidth, _barHeight);
@@ -49,9 +49,24 @@ public class TextBar extends Widget {
       self.fill(this.barColor); 
       self.rectMode(CORNER);
       self.background(this.textBackColor);
-      if (this.borderless) self.noStroke();
-      else self.stroke(255, 100, 50, 128);
-      self.rect(0, 0, this.barWidth-1, this.barHeight-1);
+      if (this.borderless) {
+        self.noStroke();
+      } else {
+        self.strokeWeight(8);
+        self.stroke(255, 100, 50, 128);
+      }
+      self.strokeWeight(4);
+      //self.rect(0, 0, this.barWidth-1, this.barHeight-1);
+      self.strokeJoin(ROUND);
+      self.stroke(255, 255);
+      self.line(1, 1, this.barWidth-1, 1);
+      self.line(1, 1, 1, this.barHeight-1);
+      self.stroke(128, 255);
+      self.line(this.barWidth-1, this.barHeight-1, this.barWidth-1, 1);
+      self.line(this.barWidth-1, this.barHeight-1, 1, this.barHeight-1);
+      self.strokeWeight(1);
+      self.stroke(128, 255);
+      self.rect(0, 0, this.barWidth, this.barHeight);
       self.endDraw();
       popStyle();
       printText(this.textContent);
@@ -63,33 +78,31 @@ public class TextBar extends Widget {
   }
 
   void render() {
-   
-     
+
+
     this.parent.self.beginDraw();
     this.parent.self.pushStyle();
-    
-    
 
-   //If I'm the first child, It is my duty to clear up the mess before rendering me...
-   if(this.parent.children.indexOf(this) == 0) //This is my long sought solution...Thank God...
+    //If I'm the first child, It is my duty to clear up the mess before rendering me...
+    if (this.parent.children.indexOf(this) == 0) //This is my long sought solution...Thank God...
     {
-    this.parent.self.clear();
-    this.parent.self.image(this.parent.buffer, 0, 0);
+      this.parent.self.clear();
+      this.parent.self.image(this.parent.buffer, 0, 0);
     }
+    
     this.parent.self.image(this.self, this.leftPos, this.topPos); 
     this.parent.self.popStyle();
     this.parent.self.endDraw();
   }
 
 
-
   void printText(String str) {
     if (str.length()==0) return;
     if (this.textDelimited) {
-      try{
-      this.printTextDelimited(str);
+      try {
+        this.printTextDelimited(str);
       }
-      catch(Exception e){
+      catch(Exception e) {
         e.printStackTrace();
         this.setText("FORMAT ERROR !");
       }
@@ -112,7 +125,7 @@ public class TextBar extends Widget {
 
     float fieldWidth = (this.barWidth-this.rightPadding-this.leftPadding);
     float fieldHeight = (this.barHeight-this.topPadding-this.bottomPadding);
- 
+
     self.textAlign(LEFT, TOP);
     self.fill(this.textBackColor);
     self.rect(0, 0, this.barWidth, this.barHeight);
@@ -158,7 +171,7 @@ public class TextBar extends Widget {
     float fieldWidthHeader = (this.barWidth-this.rightPadding-this.leftPadding);
     float fieldHeightHeader = (headerHeight-this.topPadding-this.bottomPadding);
     fieldHeight -= headerHeight;
-    
+
     self.textAlign(CENTER, CENTER);
     self.fill(this.textBackColor);
     self.rect(0, 0, this.barWidth, headerHeight);
@@ -268,6 +281,4 @@ public class TextBar extends Widget {
     this.leftPadding = _leftPadding;
     this.init();
   }
-
-
 }//EOC

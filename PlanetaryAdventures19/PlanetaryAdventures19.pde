@@ -13,7 +13,7 @@ float zoomFactor = 0.85; //This is the optimal zoom factor for speed...
 float zoomStep = 0.01;
 float pMouseX, pMouseY;
 
-final boolean showOrbitPoints = true;
+final boolean showOrbitPoints = false;
 PVector velocityAnchor  = new PVector(0, 0);
 
 void setup() {
@@ -34,26 +34,27 @@ void setup() {
   sb.addChild(txtBarsb);
   sb.addChild(txtBar);
   SB.addChild(txtBarSB);
-  
+
   String message = "Interactivity\n\n" +
     "Click and drag to add a Planet. The arrow represents the velocity vector.\n" +
-    "Press \'h\'or \'H\' to cycle through planets for highlighting.\n" + 
-    "Press \'d\'or \'D\' to delete the highlighted planet.\n" + 
-    "Orbital parameters for the highlighted planet are shown in the above text field";
+    "Press \'h\'or \'H\' to cycle through planets for selection.\n" + 
+    "Press \'d\'or \'D\' to delete the selected planet.\n" + 
+    "Orbital parameters for the selected planet are shown in the above text field";
 
   txtBarsb.setText(message); 
   txtBarsb.setTextSize(17);
   sun = new Attractor();
   planets = new ArrayList<Planet>();
+  thread("drawScene");
   background(0);
 }
 
 void draw() {
-  if (!mousePressed || sb.inFocus()) {
+  if (!mousePressed || sb.inFocus() || SB.inFocus()) {
     fill(0, 128);
     noStroke();
     rect(0, 0, width, height);
-   // background(0);
+    // background(0);
     pushMatrix();
     scale(zoomFactor);
     translate(width/2*(1/zoomFactor), height/2*(1/zoomFactor));
@@ -94,6 +95,12 @@ void keyPressed() {
       if (zoomFactor<0) zoomFactor = 0;
       background(0);
     }
+    else if (keyCode == RIGHT){
+      sb.slideOut();
+    }
+    else if (keyCode == LEFT){
+      sb.slideIn();
+    }
   } 
   if (key == 'D'||key == 'd')
   {
@@ -133,7 +140,6 @@ void mouseDragged() {
   }
   background(0);
   drawScene();
-  //redraw();
   Arrow arrow  = new Arrow(pMouseX, pMouseY, mouseX, mouseY);
   arrow.show();
 }
@@ -141,13 +147,12 @@ void mouseDragged() {
 
 
 void mousePressed() {
-  if (sb.inFocus() || SB.inFocus()) {
+  if (SB.inFocus() || sb.inFocus()) {
     return;
   }
   pMouseX = mouseX; 
   pMouseY = mouseY;
   noCursor();
-  //redraw();
 }
 
 void mouseReleased() {
@@ -185,12 +190,14 @@ void drawScene() {
   scale(zoomFactor);
   translate(width/2*(1/zoomFactor), height/2*(1/zoomFactor));
   sun.show();
-
+  
   popMatrix();
   sb.render();
   SB.render();
 }//Could Multi threading help here?
+
 void mouseClicked() {
-  sb.mouseClickedHandler();
+  
   SB.mouseClickedHandler();
+  sb.mouseClickedHandler();
 }

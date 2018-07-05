@@ -71,7 +71,7 @@ public class SideBar extends Widget
     self.endDraw();
 
     popStyle();
-     if (this.children.size()>0) {
+    if (this.children.size()>0) {
 
       for (Widget w : this.children) {
         w.init();
@@ -81,23 +81,11 @@ public class SideBar extends Widget
     this.buffer = this.self.get();
   }
 
- //public void renderChildren(Widget w) {
- //   if (this.children.size()>0) {
- //      int j = children.indexOf(w);
- //     for (int i=0; i<this.children.size()-1; i++) {
- //       Widget o=this.children.get(i);
- //       if(i != j) o.render();
- //     }
- //   }
- // }
- 
   void render() {
-
+    pushMatrix();
     if (this.children.size()>0) {
-
       for (Widget w : this.children) {
         w.render();
-        //self.image(w.self, w.leftPos, w.topPos);
       }
     }
 
@@ -106,7 +94,6 @@ public class SideBar extends Widget
     float diff = abs(target-this.leftPos);
     if (!this.latched) {
       this.leftPos += this.slide*(diff*animSpeed);
-      //this.leftPos += this.slide*3;
     }
 
     float handlePosition = this.leftPos + this.barWidth-this.handleWidth;
@@ -122,6 +109,17 @@ public class SideBar extends Widget
       this.latched = true;
       this.leftPos = 0;
     }
+    popMatrix();
+  }
+
+  void slideOut() {
+    this.latched = false;
+    this.slide = 1;
+  }
+
+  void slideIn() {
+    this.latched = false;
+    this.slide = -1;
   }
 
 
@@ -176,8 +174,5 @@ public class SideBar extends Widget
     this.children.add(child);
     child.setParent(this);
     child.init();
-    //DEBUG CODE
-    // println(this.children.size());
-    //printArray(Thread.currentThread().getStackTrace());
   }
 }//EOC
