@@ -34,7 +34,7 @@ public class TextBar extends Widget implements Focusable {
   private void initFields() {
     this.textContent = "";
     this.textBackColor = color(15, 50, 20, 225);
-    this.textColor = color(200, 200, 200, 255);
+    this.textColor = color(255, 255, 255, 255);
     this.font = createFont("Calibri", this.textSize, true);
     this.textHeight = textAscent()+textDescent()+this.font.getSize();
     this.barColor = color(red(this.textBackColor), green(this.textBackColor), blue(this.textBackColor), 0); //Bar Color Should be 
@@ -45,7 +45,7 @@ public class TextBar extends Widget implements Focusable {
   void init() {
     pushStyle();
     try {
-      self.smooth(4);
+      self.smooth(8);
       self.beginDraw();
       self.fill(this.textBackColor); 
       self.rectMode(CORNER);
@@ -81,7 +81,7 @@ public class TextBar extends Widget implements Focusable {
     //If I'm the first child, It is my duty to clear up the mess before rendering me...
     if (this.parent.children.indexOf(this) == 0) //This is my long sought solution...Thank God...
     {
-      this.parent.self.clear();//or .background(this.parent.barColor)
+      this.parent.self.clear();
       this.parent.self.image(this.parent.buffer, 0, 0);
     }
     
@@ -107,8 +107,7 @@ public class TextBar extends Widget implements Focusable {
       }
       return;
     } 
-    //printArray(Thread.currentThread().getStackTrace());
-
+    
     pushStyle();
     self.beginDraw();
     self.rectMode(CORNER);
@@ -126,9 +125,6 @@ public class TextBar extends Widget implements Focusable {
     float fieldHeight = (this.barHeight-this.topPadding-this.bottomPadding);
 
     self.textAlign(LEFT, TOP);
-    //self.fill(this.textBackColor);
-   
-   // self.rect(0, 0, this.barWidth, this.barHeight);
     self.fill(this.textColor); 
     self.textSize(this.textSize);
     self.text(str, this.leftPadding, this.topPadding, 
@@ -145,10 +141,6 @@ public class TextBar extends Widget implements Focusable {
     String headerStr = splitString[0];
     String leftStr = splitString[1];
     String rightStr = splitString[2];
-    //Wonderfull defugging tools ahead !
-    //println(headerStr + " "+ millis()); // Why this is printed twice?
-    //printArray(Thread.currentThread().getStackTrace()); //Found out through stack trace
-    //
     pushStyle();
 
     self.beginDraw();
@@ -174,25 +166,20 @@ public class TextBar extends Widget implements Focusable {
 
     self.textAlign(CENTER, CENTER);
     self.fill(this.textBackColor);
-    //self.rect(0, 0, this.barWidth, headerHeight);
     self.fill(this.textColor); 
     self.textSize(18);
     self.text(headerStr, this.leftPadding, this.topPadding, 
-      fieldWidthHeader, fieldHeightHeader);
+              fieldWidthHeader, fieldHeightHeader);
 
     //Begining left text surface
     self.textSize(this.textSize);
-    self.textAlign(RIGHT, TOP);
-    self.fill(this.textBackColor);
-    //self.rect(0, headerHeight, this.barWidth/2, this.barHeight);
+    self.textAlign(RIGHT, TOP); 
     self.fill(this.textColor); 
     self.text(leftStr, this.leftPadding, headerHeight+this.topPadding, fieldWidth, fieldHeight);
-    //self.rect(this.leftPadding, headerHeight+this.topPadding, fieldWidth, fieldHeight);
-
+    
     //Beginning right text surface
     self.textAlign(LEFT, TOP);
     self.fill(this.textBackColor);
-    //self.rect(this.barWidth/2, headerHeight, this.barWidth/2, this.barHeight);
     self.fill(this.textColor);
     self.text(rightStr, this.barWidth/2+this.leftPadding, headerHeight+this.topPadding, fieldWidth, fieldHeight);
 
@@ -204,19 +191,19 @@ public class TextBar extends Widget implements Focusable {
       //self.line(this.leftPadding, this.textHeight+this.topPadding-this.textLeading/(4*textLeadingFactor), 
       //  this.leftPadding+self.textWidth(str.split("\n")[0]), this.textHeight+this.topPadding-this.textLeading/(4*textLeadingFactor));
       //self.line(this.leftPadding, this.textHeight+1, 
-      //     this.leftPadding+self.textWidth(str.split("\n")[0]), this.textHeight+1);
+      //    this.leftPadding+self.textWidth(str.split("\n")[0]), this.textHeight+1);
     }
     self.endDraw();
     popStyle();
   }
 
-  boolean inFocus() { //Have to change this but how? think... well changed
+  boolean inFocus() { 
     float relX  = mouseX - this.parent.leftPos;
     float relY = mouseY - this.parent.topPos;
-    return (relX> this.leftPos &&
-      relX < (this.leftPos + this.barWidth) &&
-      relY > this.topPos && 
-      relY < (this.topPos + this.barHeight));
+    return (relX > this.leftPos &&
+            relX < (this.leftPos + this.barWidth) &&
+            relY > this.topPos && 
+            relY < (this.topPos + this.barHeight));
   }
 
   void mouseClickedHandler() {
@@ -228,8 +215,6 @@ public class TextBar extends Widget implements Focusable {
 
   void setParent(Widget w) {
     this.parent = w;
-    //print("I am in TextBar setParent method my parent is : ");
-    //println(this.parent);
   }
 
   private String[] split(String str)
@@ -281,4 +266,4 @@ public class TextBar extends Widget implements Focusable {
     this.leftPadding = _leftPadding;
     this.init();
   }
-}//EOC
+}

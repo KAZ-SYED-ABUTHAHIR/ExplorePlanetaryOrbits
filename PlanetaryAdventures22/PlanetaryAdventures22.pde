@@ -18,7 +18,7 @@ float pMouseX, pMouseY;
 final boolean showOrbitPoints = false;
 PVector velocityAnchor  = new PVector(0, 0);
 
-final int FRAME_RATE = 60;
+final int FRAME_RATE = 120;
 
 
 
@@ -36,7 +36,7 @@ void setup() {
   txtBarsb = new TextBar(10, sb.barHeight/1.8+10, (sb.getDrawWidth()-20), sb.barHeight-(sb.barHeight/1.8+20));
   txtBarSB = new TextBar(10, 10, (SB.getDrawWidth()-20), SB.barHeight/2-10);
   
-  txtBar.setTextSize(16);
+  txtBar.setTextSize(15);
   txtBarSB.setTextSize(16);
 
   sb.addChild(txtBarsb);

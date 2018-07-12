@@ -111,7 +111,7 @@ public class Planet {   //<>//
       color endColor = color(endRed, endGreen, endBlue);
       noFill();
       strokeWeight(2);
-      for (float i=0; i<=1; i+=0.1) {
+      for (float i=0; i<=1; i+=0.05) {
         stroke(lerpColor(beginColor, endColor, i), map(i, 0, 1, 100, 255)); 
         ellipse(this.position.x, this.position.y, this.size+25*i, this.size+25*i);
       }
