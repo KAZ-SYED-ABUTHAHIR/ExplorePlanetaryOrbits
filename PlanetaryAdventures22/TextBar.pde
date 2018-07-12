@@ -1,11 +1,11 @@
 
 public class TextBar extends Widget implements Focusable {
 
-  protected PFont font;     //Font used for text o/p
-  protected String textContent; // Text to be displayed in the text bar
-  protected color textBackColor; // Color of the text surface
-  protected color textColor; // Color of the text
-  protected float textHeight; // Text Height for alignment purposes
+  protected PFont font;               // Font used for text o/p
+  protected String textContent;       // Text to be displayed in the text bar
+  protected color textBackColor;      // Color of the text surface
+  protected color textColor;          // Color of the text
+  protected float textHeight;         // Text Height for alignment purposes
   protected float textLeading = 20;
   protected float leftPadding = 10;
   protected float rightPadding = 10;
@@ -13,7 +13,7 @@ public class TextBar extends Widget implements Focusable {
   protected float bottomPadding = 10;
   protected float textSize = 14;
   protected boolean borderless = false;
-  protected boolean textDelimited ; //is this necessary?
+  protected boolean textDelimited ;   //is this necessary?
   protected char delimiter;
 
 
@@ -33,14 +33,15 @@ public class TextBar extends Widget implements Focusable {
 
   private void initFields() {
     this.textContent = "";
-    this.textBackColor = color(5, 25, 10, 200);
+    this.textBackColor = color(15, 50, 20, 225);
     this.textColor = color(200, 200, 200, 255);
     this.font = createFont("Calibri", this.textSize, true);
     this.textHeight = textAscent()+textDescent()+this.font.getSize();
-    this.barColor = color(255, 255, 255, 0);;
+    this.barColor = color(red(this.textBackColor), green(this.textBackColor), blue(this.textBackColor), 0); //Bar Color Should be 
     this.self = createGraphics((int)this.barWidth, (int)this.barHeight);
     this.self.smooth(8);
   }
+  
   void init() {
     pushStyle();
     try {
@@ -52,24 +53,15 @@ public class TextBar extends Widget implements Focusable {
       if (this.borderless) {
         self.noStroke();
       } else {
-        self.strokeWeight(8);
+        self.strokeWeight(2);
         self.stroke(255, 100, 50, 128);
       }
-      //self.strokeWeight(4);
-      //self.rect(0, 0, this.barWidth-1, this.barHeight-1);
+      
       self.strokeJoin(ROUND);
-      //self.stroke(255, 255);
-      //self.line(1, 1, this.barWidth-1, 1);
-      //self.line(1, 1, 1, this.barHeight-1);
-      //self.stroke(128, 255);
-      //self.line(this.barWidth-1, this.barHeight-1, this.barWidth-1, 1);
-      //self.line(this.barWidth-1, this.barHeight-1, 1, this.barHeight-1);
-      //self.strokeWeight(0);
-      self.noStroke();
-      //self.stroke(128, 255);
     
-      self.rect(0, 0, this.barWidth-1, this.barHeight-1,30);
+      self.rect(1, 1, this.barWidth-2, this.barHeight-2,20);
       self.endDraw();
+      
       popStyle();
       printText(this.textContent);
     }
