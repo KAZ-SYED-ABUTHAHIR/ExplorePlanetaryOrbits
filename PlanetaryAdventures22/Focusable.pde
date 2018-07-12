@@ -1,0 +1,3 @@
+interface Focusable {
+   boolean inFocus();
+}
