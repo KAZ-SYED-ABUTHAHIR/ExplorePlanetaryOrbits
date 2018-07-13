@@ -12,39 +12,76 @@ public abstract  class Widget {
   protected float relLeftPos=0; // Relative position from the parent/container left as a fraction of parents width
   protected color barColor ; // Background color of the Widget
   protected PImage img; // Optional background image can be set.
-  
-  Widget(float _topPos,float _barWidth,float _barHeight){
-    
+
+  Widget(float _topPos, float _barWidth, float _barHeight) {
+
     this.topPos = _topPos;
     this.barWidth = _barWidth;
     this.barHeight = _barHeight;
   }
-  
-  Widget(float _leftPos,float _topPos,float _barWidth,float _barHeight){
+
+  Widget(float _leftPos, float _topPos, float _barWidth, float _barHeight) {
     this.leftPos = _leftPos;
     this.topPos = _topPos;
     this.barWidth = _barWidth;
     this.barHeight = _barHeight;
   }
-  
- 
-  Widget(){
+
+
+  Widget() {
   }
-  
+
   protected abstract void init();
   protected abstract void render();
- 
+
   //abstract boolean inFocus();
   protected abstract void mouseClickedHandler();
   protected abstract void addChild(Widget child);
-  protected abstract void setParent(Widget w);
+
+  //---------------------------------------------------------------------------------------------//
+  //-----------------------------------GETTERS & SETTERS-----------------------------------------//
+
+  //----------------------------------------GETTERS----------------------------------------------//
   
+  Widget getParent() {
+    return this.parent;
+  }
+
+  ArrayList<Widget> getChildren() {
+    return this.children;
+  }
+  
+  PImage getBuffer() {
+    return this.buffer;
+  }
+  
+  float getBarWidth() {
+   return this.barWidth; 
+  }
+  
+  float getBarHeight() {
+   return this.barHeight; 
+  }
+  
+  color getBarColor() {
+    return this.barColor;
+  }
+
+  //----------------------------------------SETTERS----------------------------------------------//
+
+  void setParent(Widget w) {
+    this.parent = w;
+  }
+  
+  void setBarColor(color _barColor) {
+    this.barColor = _barColor;
+  }
 }//EOAC
 
 /*
 Tamil Unicode 
-"\u0B85\u0BAE\u0B82\u0BAE\u0BBE " ---> ammA
-Project Idea
-
-
-*/
+ "\u0B85\u0BAE\u0B82\u0BAE\u0BBE " ---> ammA
+ Project Idea
+ 
+ 
+ */

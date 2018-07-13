@@ -11,8 +11,12 @@ SideBar SB;
 TextBar txtBar, txtBarSB, txtBarsb;
 int highlightedPlanetIndex = -1;
 
-float zoomFactor = 0.85; //This is the optimal zoom factor for speed...
+float zoomFactor = 0.575; //This is the optimal zoom factor for speed...
 float zoomStep = 0.01;
+
+float panX = 0, panY = 0;
+float panStep = 5;
+
 float pMouseX, pMouseY;
 
 final boolean showOrbitPoints = false;
@@ -35,7 +39,7 @@ void setup() {
   txtBar = new TextBar(10, 10, (sb.getDrawWidth()-20), sb.barHeight/1.8-10);
   txtBarsb = new TextBar(10, sb.barHeight/1.8+10, (sb.getDrawWidth()-20), sb.barHeight-(sb.barHeight/1.8+20));
   txtBarSB = new TextBar(10, 10, (SB.getDrawWidth()-20), SB.barHeight/2-10);
-  
+
   txtBar.setTextSize(15);
   txtBarSB.setTextSize(16);
 
@@ -45,8 +49,9 @@ void setup() {
 
   String message = "Interactivity\n\n" +
     "Click and drag to add a Planet. The arrow represents the velocity vector.\n" +
-    "Press \'h\'or \'H\' to cycle through planets for selection.\n" + 
-    "Press \'d\'or \'D\' to delete the selected planet.\n" + 
+    "Press \'h\' or \'H\' to cycle through planets for selection.\n" + 
+    "Press \'d\' or \'D\' to delete the selected planet.\n" + 
+    "Press 'a','s','w' or 'z' for panning\n" +
     "Orbital parameters for the selected planet are shown in the above text field";
 
   txtBarsb.setText(message); 
@@ -54,9 +59,8 @@ void setup() {
   sun = new Attractor();
   planets = new ArrayList<Planet>();
 
-  thread("calculateForceandUpdate");
- 
-  background(0);
+  //  thread("calculateForceandUpdate");
+  //  background(0);
 }
 
 void draw() {
@@ -68,6 +72,7 @@ void draw() {
     pushMatrix();
     scale(zoomFactor);
     translate(width/2*(1/zoomFactor), height/2*(1/zoomFactor));
+    pan(panX, panY);
     sun.show();
 
     for (Planet p : planets) {
@@ -75,9 +80,9 @@ void draw() {
     }
 
     for (Planet p : planets) {
-      //p.calcForce(sun);
-      //p.update();
-      //update and calcForce are running in a seperate thread.
+      p.calcForce(sun);
+      p.update();
+      // //update and calcForce are running in a seperate thread.
       p.show();
       p.showVelocity();
       p.showAcceleration();
@@ -93,6 +98,16 @@ void draw() {
       txtBarSB.setText(debugMsg, ':');
     }
   }
+  
+  if ((key == 'a' || key == 'A') && keyPressed) {
+    panX += panStep;
+  } else if ((key == 's' || key == 'S') && keyPressed) {
+    panX -= panStep;
+  } else if ((key == 'w' || key == 'W') && keyPressed) {
+    panY += panStep;
+  } else if ((key == 'z' || key == 'Z') && keyPressed) {
+    panY -= panStep;
+  }
 }
 
 
@@ -100,11 +115,11 @@ void keyPressed() {
   if (key == CODED) {
     if (keyCode == UP) {
       zoomFactor += zoomStep;
-      if (zoomFactor>10) zoomFactor = 10;
+      if (zoomFactor>1) zoomFactor = 1;
       background(0);
     } else if (keyCode == DOWN) {
       zoomFactor -= zoomStep;
-      if (zoomFactor<0) zoomFactor = 0;
+      if (zoomFactor<0.15) zoomFactor = 0.15;
       background(0);
     } else if (keyCode == RIGHT) {
       sb.slideOut();
@@ -112,8 +127,8 @@ void keyPressed() {
       sb.slideIn();
     }
   } 
-  if (key == 'D'||key == 'd')
-  {
+
+  if (key == 'D'||key == 'd') {
 
     if (planets.size()>0) {
       planets.remove(planets.get(highlightedPlanetIndex++));
@@ -128,8 +143,7 @@ void keyPressed() {
       background(0);
     }
   }
-  if (key == 'H'||key == 'h')
-  {
+  if (key == 'H'||key == 'h') {
     if (planets.size()>0) {
       planets.get(highlightedPlanetIndex++).setHighlighted(false);
       if (highlightedPlanetIndex > (planets.size()-1)) highlightedPlanetIndex = 0;
@@ -200,6 +214,7 @@ void drawScene() {
   pushMatrix();
   scale(zoomFactor);
   translate(width/2*(1/zoomFactor), height/2*(1/zoomFactor));
+  pan(panX, panY);
   sun.show();
   popMatrix();
 }
@@ -209,12 +224,17 @@ void mouseClicked() {
 }
 
 synchronized void calculateForceandUpdate() {
-  for (;; delay(int(1000/frameRate))) {
+  //for (;; delay(int(1000/frameRate))) {
 
-    for (Planet p : planets) {
-      p.calcForce(sun);
-      p.update();
-      
-    }
-  }
+  //  for (Planet p : planets) {
+  //    p.calcForce(sun);
+  //    p.update();
+
+  //  }
+  //}
+}
+
+
+void pan(float shiftX, float shiftY) {
+  translate(shiftX, shiftY);
 }

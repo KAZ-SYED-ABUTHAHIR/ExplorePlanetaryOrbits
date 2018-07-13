@@ -110,10 +110,10 @@ public class Planet {   //<>//
       color beginColor = color(beginRed, beginGreen, beginBlue);
       color endColor = color(endRed, endGreen, endBlue);
       noFill();
-      strokeWeight(2);
+      strokeWeight(3);
       for (float i=0; i<=1; i+=0.05) {
         stroke(lerpColor(beginColor, endColor, i), map(i, 0, 1, 100, 255)); 
-        ellipse(this.position.x, this.position.y, this.size+25*i, this.size+25*i);
+        ellipse(this.position.x, this.position.y, this.size+50*i, this.size+50*i);
       }
       popStyle();
     }

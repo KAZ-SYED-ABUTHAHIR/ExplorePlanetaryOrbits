@@ -1,12 +1,14 @@
 //Have to be developed into a potential UI Component in Future.
 
-public enum Direction {
-    TO_LEFT ,TO_RIGHT
-  }
+
 
 public class SideBar extends Widget implements Focusable
 {
- 
+
+  private final byte TO_LEFT  = -1;
+  private final byte TO_RIGHT = +1;
+  private final byte TO_REVERSE = -1;
+
   protected PApplet granny;
 
   protected float handleWidth; //Width of the handle to pull out the side bar
@@ -15,7 +17,7 @@ public class SideBar extends Widget implements Focusable
   protected color handleColor; // Color of the handle
 
   private boolean latched = true; // Property to keep track of latching condition of the sidebar
-  private int slide = -1;         // To determine sliding direction on mouse click multiplied by -1. 
+  private byte slide = TO_LEFT;    // To determine sliding direction on mouse click multiplied by -1. 
   // Hence start with -1 for sliding out
   private float drawWidth;
 
@@ -24,10 +26,11 @@ public class SideBar extends Widget implements Focusable
     this.granny = _granny;
     this.granny.registerMethod("draw", this);
     this.granny.registerMethod("mouseEvent", this);
+
     this.animSpeed = 0.2;
     this.barWidth = 2*width/3;
     this.barHeight = height/2;
-    this.handleWidth = 10;
+    this.handleWidth = 15;
     this.leftPos = -this.barWidth + this.handleWidth;
     this.topPos = height*this.relTopPos;
     this.drawWidth = this.barWidth - this.handleWidth;
@@ -44,7 +47,7 @@ public class SideBar extends Widget implements Focusable
     this.granny.registerMethod("draw", this);
     this.granny.registerMethod("mouseEvent", this);
 
-    this.handleWidth = 10;
+    this.handleWidth = 15;
     this.leftPos = -this.barWidth + this.handleWidth;
     this.drawWidth = this.barWidth - this.handleWidth;
 
@@ -67,9 +70,9 @@ public class SideBar extends Widget implements Focusable
     pushStyle();
     self.noFill();
     //self.strokeJoin(BEVEL);
-    float beginX = this.barWidth-this.handleWidth/2;
+    float beginX = this.barWidth-this.handleWidth/2-1;
 
-    for (float i=-this.handleWidth/2; i<this.handleWidth/2+2; i++) {
+    for (float i=-this.handleWidth/2; i<this.handleWidth/2; i++) {
       self.stroke(red(this.handleColor), green(this.handleColor), blue(this.handleColor)
         , abs(155-abs(map(i, -handleWidth/2, handleWidth/2, -155, 155))));
       this.self.line(beginX+i, 0, beginX+i, this.barHeight);
@@ -96,7 +99,7 @@ public class SideBar extends Widget implements Focusable
 
   void render() {
     pushMatrix();
-   
+
     if (this.children.size()>0) {
       for (Widget w : this.children) {
         w.render();
@@ -128,12 +131,12 @@ public class SideBar extends Widget implements Focusable
 
   void slideOut() {
     this.latched = false;
-    this.slide = 1;
+    this.slide = TO_RIGHT;
   }
 
   void slideIn() {
     this.latched = false;
-    this.slide = -1;
+    this.slide = TO_LEFT;
   }
 
 
@@ -204,7 +207,6 @@ public class SideBar extends Widget implements Focusable
   void mousePressedHandler() {
     if (this.inFocus()) {
       try {
-        
       } 
       catch(Exception e) {
         e.printStackTrace();
@@ -216,7 +218,6 @@ public class SideBar extends Widget implements Focusable
   void mouseReleasedHandler() {
     if (this.inFocus()) {
       try {
-       
       } 
       catch(Exception e) {
         e.printStackTrace();
@@ -229,7 +230,7 @@ public class SideBar extends Widget implements Focusable
     float handlePosition = this.leftPos + this.barWidth-this.handleWidth;
     if (mouseX > handlePosition && mouseX < handlePosition+this.handleWidth && this.inFocus()) {
       this.latched = false;
-      this.slide *= -1.0;
+      this.slide *= TO_REVERSE;
     }
     try
     {
@@ -262,7 +263,7 @@ public class SideBar extends Widget implements Focusable
   float getAnimSpeed() {
     return this.animSpeed;
   }
-  
+
   color getHandleColor() {
     return this.handleColor;
   }
@@ -273,13 +274,15 @@ public class SideBar extends Widget implements Focusable
 
   //----------------------------------------SETTERS------------------------------------------------//
 
-  void setParent(Widget w) {
-    this.parent = null;
-  }
+
 
   void setHandleColor(color c) {
     this.handleColor = color(red(c), green(c), blue(c), 128);
     this.init();
+  }
+
+  void setHandleWidth(float _handleWidth) {
+    this.handleWidth = _handleWidth;
   }
 
   void setImage(PImage _image) {

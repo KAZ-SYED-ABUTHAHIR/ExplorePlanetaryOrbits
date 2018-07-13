@@ -12,6 +12,7 @@ public class Arrow {
 
   boolean stylizedHead = false;
 
+
   Arrow(PVector _anchor, PVector _body) {
     this.anchor = _anchor.copy();
     this.body = _body.copy();
