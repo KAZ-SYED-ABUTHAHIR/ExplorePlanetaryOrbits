@@ -1,4 +1,7 @@
 public class Planet {   //<>//
+  private float preFrameRate;
+  private float currentFrameRate;
+  private float averageFrameRate;
   PVector position = new PVector();
   PVector oldPosition = new PVector();     // For Doing Verlet Integration.
   PVector velocity = new PVector();
@@ -49,6 +52,8 @@ public class Planet {   //<>//
     this.mass = _mass;
     this.name = "Planet";
     this.orbitDescriptor = "";
+    this.preFrameRate = frameRate;
+    this.currentFrameRate = frameRate;
     pushStyle();
     colorMode(HSB);
     this.planetColor = color(random(255), 255, 255, 255);
@@ -125,12 +130,11 @@ public class Planet {   //<>//
   
   void initVerlet() {
     //What is wrong?
-    float deltaTime = 60/frameRate;
+    float deltaTime = 1.0f; //60/frameRate; Haa ! Verlet integration can't have variable deltaTime It is 
     try {
     this.calcForce(this.myAttractor);
     PVector tempOldPosition = this.oldPosition.copy();
     this.position = tempOldPosition.add(this.velocity.mult(deltaTime)).add(this.acceleration.mult(0.5*deltaTime*deltaTime));
-    println(this.position);
     }
     catch(Exception e){
       e.printStackTrace();
@@ -141,26 +145,34 @@ public class Planet {   //<>//
   void update() {
     
     
-    float deltaTime = 60/frameRate;
+    float deltaTime = 1.0f; //60/frameRate;
     //NEW VERLET
-    PVector tempPosition = this.position.copy();
-    //PVector tempOldPosition = this.oldPosition.copy();
-    
-    this.position.mult(2).sub(this.oldPosition).add(this.acceleration.mult(deltaTime*deltaTime));
-    this.oldPosition = tempPosition.copy();
-    
-    
+   
+    verletIntegrate(deltaTime);
     //NEW
     
-    //this.velocity.add(PVector.mult(this.acceleration, deltaTime));
-    //this.position.add(PVector.mult(this.velocity, deltaTime));
-  
+    
     velocityArrow.setArrow(this.position, this.velocity.copy().mult(velocityArrowScale));
     accelerationArrow.setArrow(this.position, this.acceleration.copy().mult(velocityArrowScale*30));
     this.acceleration.setMag(0);
     //println("deltaTime: "+deltaTime);//deltaTime ---> experimental Seems to be OK...
   }
 
+void linearIntegrate(float deltaTime){
+    this.velocity.add(PVector.mult(this.acceleration, deltaTime));
+    this.position.add(PVector.mult(this.velocity, deltaTime));
+  
+}
+
+ void verletIntegrate(float deltaTime) {
+    PVector tempPosition = this.position.copy();
+    PVector tempAcceleration = this.acceleration.copy();
+    
+    this.position.mult(2).sub(this.oldPosition).add(tempAcceleration.mult(deltaTime*deltaTime));
+    this.oldPosition = tempPosition.copy();
+    this.velocity = PVector.sub(this.position,this.oldPosition).mult(1/deltaTime);
+    
+ }
   //CalcForce : Calculate Force using Newton's Law of Gravitation. The Great Inverse Square Law.
   void calcForce(Attractor attractor) {
     float dist = PVector.dist(this.position, attractor.position);
@@ -197,7 +209,7 @@ public class Planet {   //<>//
       count++;
     } while ((abs(heading-initHeading)>this.threshold || count < this.minOrbitPointCount) && !(count>this.maxOrbitPointCount));
     if (orbitPoints.size()<maxOrbitPointCount) {
-      this.orbitalPeriod = (orbitPoints.size())*(1/frameRate);
+      this.orbitalPeriod = (orbitPoints.size())*(1/60.0f);
     }
     this.orbitalEccentricity = (this.maxRadius-this.minRadius)/(this.maxRadius+this.minRadius);
     this.apoapsis = orbitPoints.get(maxIndex);
